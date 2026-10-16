@@ -1,50 +1,33 @@
 class Gpy < Formula
-  desc "High-performance Fish shell prompt with agent-based architecture"
+  desc "Fast shell prompt for Fish, Zsh and Bash with an agent-based architecture"
   homepage "https://github.com/jpease/gpy"
-  url "https://github.com/jpease/gpy/archive/refs/tags/v0.1.0.tar.gz"
-  sha256 "a003b8668d5247aa2db0d77f5e4dd4b30f0ae214abf4ec9eaeb962bf8b665041"
+  url "https://github.com/jpease/gpy/archive/refs/tags/v0.3.1.tar.gz"
+  sha256 "d0ed3f9d3ef9c120722699dc605b1d8f50db4c544e5edf42d3c1e9797f8fad14"
   license "GPL-3.0-or-later"
   head "https://github.com/jpease/gpy.git", branch: "main"
 
   depends_on "rust" => :build
-  depends_on "fish"
 
   def install
     system "cargo", "install", *std_cargo_args(path: "gpy-agent")
 
-    # Preserve the fish/{core,segments,functions,conf.d,completions} layout
-    # as-is: gpy_init.fish (the Fish integration contract) expects that exact
-    # tree under a single "gpy" directory, not a flattened function autoload
-    # dir. Users wire it into their Fish config per the caveats below.
-    pkgshare.install Dir["fish/*"]
+    # Ship the three shell trees as-is. Nothing here needs a shell installed:
+    # they are plain scripts, and `gpy setup` copies the one for the user's
+    # shell into their config dir and wires their rc file.
+    pkgshare.install "fish", "zsh", "bash"
 
     doc.install "README.md", "SECURITY.md"
   end
 
   def caveats
     <<~EOS
-      GPY has been installed, but Homebrew formulas don't modify your
-      dotfiles automatically. To finish Fish integration:
+      GPY is installed, but Homebrew formulas don't modify your dotfiles.
+      To wire it into the shell you use (Fish, Zsh or Bash), run:
 
-        mkdir -p ~/.config/fish/gpy ~/.config/fish/completions ~/.config/fish/functions
-        cp -r #{opt_pkgshare}/core #{opt_pkgshare}/segments #{opt_pkgshare}/functions \\
-          #{opt_pkgshare}/conf.d ~/.config/fish/gpy/
-        # One autoloadable file: fish loads completions/gpy.fish only, so the
-        # dynamic glue is appended to the generated completions (#702).
-        gpy completions fish > ~/.config/fish/completions/gpy.fish
-        cat #{opt_pkgshare}/completions/gpy-dynamic.fish >> ~/.config/fish/completions/gpy.fish
+        gpy setup
 
-        # Fish only autoloads functions from ~/.config/fish/functions, so
-        # this needs a symlink there alongside fish_prompt itself.
-        ln -sf ~/.config/fish/gpy/functions/fish_prompt.fish ~/.config/fish/functions/fish_prompt.fish
-
-      Then add to ~/.config/fish/config.fish:
-
-        if status is-interactive
-            source ~/.config/fish/gpy/conf.d/gpy_init.fish
-        end
-
-      Restart Fish, then run 'gpy-agent init' to finish configuration.
+      It detects your shell from $SHELL; pass --shell fish|zsh|bash to pick
+      another. Then restart your shell with `exec $SHELL`.
       Run 'gpy doctor' any time to check your setup.
     EOS
   end
@@ -54,5 +37,10 @@ class Gpy < Formula
     system "#{bin}/gpy-agent", "oneshot", "git", "--cwd", testpath
     system "#{bin}/gpy-agent", "oneshot", "lang", "--cwd", testpath
     system "#{bin}/gpy", "--version"
+
+    # The shipped layout is what `gpy setup` consumes.
+    ENV["HOME"] = testpath
+    system "#{bin}/gpy", "setup", "--shell", "zsh", "--non-interactive", "--from", pkgshare
+    assert_path_exists testpath/".config/gpy/zsh/gpy.zsh"
   end
 end
