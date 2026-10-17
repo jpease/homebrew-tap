@@ -1,15 +1,17 @@
 class Gpy < Formula
   desc "Fast shell prompt for Fish, Zsh and Bash with an agent-based architecture"
   homepage "https://github.com/jpease/gpy"
-  url "https://github.com/jpease/gpy/archive/refs/tags/v0.3.1.tar.gz"
-  sha256 "d0ed3f9d3ef9c120722699dc605b1d8f50db4c544e5edf42d3c1e9797f8fad14"
+  url "https://github.com/jpease/gpy/archive/refs/tags/v0.4.0.tar.gz"
+  sha256 "a21bf9982e2c6120efb32702df035c5d689f34c28ae0894221996689a5f6330f"
   license "GPL-3.0-or-later"
   head "https://github.com/jpease/gpy.git", branch: "main"
 
   depends_on "rust" => :build
 
   def install
-    system "cargo", "install", *std_cargo_args(path: "gpy-agent")
+    # release-dist is the optimized profile the release binaries use; the
+    # crate's plain `release` profile is tuned for build speed.
+    system "cargo", "install", "--profile", "release-dist", *std_cargo_args(path: "gpy-agent")
 
     # Ship the three shell trees as-is. Nothing here needs a shell installed:
     # they are plain scripts, and `gpy setup` copies the one for the user's
