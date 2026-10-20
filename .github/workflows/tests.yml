@@ -18,9 +18,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # Bottles are built on the oldest macOS each arch runs here: Homebrew
-        # uses a bottle on that release and every newer one.
-        os: [ macos-15, macos-15-intel ]
+        # Bottles are built on the oldest macOS runner: Homebrew uses a bottle
+        # on that release and every newer one. No Intel leg: homebrew-core has
+        # no Intel macOS bottle of the `rust` build dependency, so test-bot
+        # skips the formula there.
+        os: [ macos-15 ]
         include:
           - os: ubuntu-latest
             container:

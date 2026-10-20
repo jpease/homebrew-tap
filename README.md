@@ -12,8 +12,8 @@ caveats or the [install guide](https://github.com/jpease/gpy/blob/main/docs/INST
 ## Bottles
 
 Formula changes go through pull requests. `brew test-bot` (`tests.yml`) builds
-and tests bottles on macOS 15 (Apple Silicon and Intel) and Linux x86_64. Once
-it is green, publish them with:
+and tests bottles on macOS 15 (Apple Silicon) and Linux x86_64; Intel Macs
+build from source. Once it is green, publish them with:
 
 ```sh
 gh workflow run publish.yml -R jpease/homebrew-tap -f pull_request=<number>
