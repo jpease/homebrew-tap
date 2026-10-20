@@ -1,8 +1,8 @@
 class Gpy < Formula
   desc "Fast shell prompt for Fish, Zsh and Bash with an agent-based architecture"
   homepage "https://github.com/jpease/gpy"
-  url "https://github.com/jpease/gpy/archive/refs/tags/v0.4.0.tar.gz"
-  sha256 "a21bf9982e2c6120efb32702df035c5d689f34c28ae0894221996689a5f6330f"
+  url "https://github.com/jpease/gpy/archive/refs/tags/v0.5.0.tar.gz"
+  sha256 "06629edcc225190d8441a181a70164cbffb30c0b7b0a2d1d70267a0df4e7d144"
   license "GPL-3.0-or-later"
   head "https://github.com/jpease/gpy.git", branch: "main"
 
