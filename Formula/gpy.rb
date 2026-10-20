@@ -11,6 +11,12 @@ class Gpy < Formula
     strategy :github_latest
   end
 
+  bottle do
+    root_url "https://github.com/jpease/homebrew-tap/releases/download/gpy-0.5.1"
+    sha256 cellar: :any_skip_relocation, arm64_sequoia: "6b65d7bf83331ded6c6f2ade9685507b02e252494397c2e727f560fe8a43ad0f"
+    sha256 cellar: :any,                 x86_64_linux:  "6baee6a631b2adb1ba25765e2c9911c64ff747551a952742dcf6c8cd032c9065"
+  end
+
   depends_on "rust" => :build
 
   def install
