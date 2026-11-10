@@ -28,13 +28,13 @@ class Gpy < Formula
   end
 
   # An agent still running from the previous version keeps serving (and can
-  # fail) after an upgrade. Replace it when one is running; never start one.
-  # Best effort: the post_install sandbox may refuse the socket, and a failure
-  # must not fail the install.
-  def post_install
-    return unless quiet_system bin/"gpy-agent", "status"
-
-    quiet_system bin/"gpy-agent", "restart"
+  # fail) after an upgrade. Replace it when its socket exists; never start one.
+  # Best effort: a failed restart must not fail the install.
+  post_install_steps do
+    if_path_exists ".cache/gpy/gpy.sock", base: :home do
+      run "gpy-agent", base: :bin, args: ["restart"], must_succeed: false,
+                       writable_paths: [".cache/gpy"], writable_base: :home
+    end
   end
 
   def caveats
