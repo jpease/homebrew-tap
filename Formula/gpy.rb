@@ -1,20 +1,14 @@
 class Gpy < Formula
   desc "Fast shell prompt for Fish, Zsh and Bash with an agent-based architecture"
   homepage "https://github.com/jpease/gpy"
-  url "https://github.com/jpease/gpy/archive/refs/tags/v0.10.3.tar.gz"
-  sha256 "083d7acc026819fb3ee97be9814087191f8d84870ede293c7899bf78133c7d4f"
+  url "https://github.com/jpease/gpy/archive/refs/tags/v0.10.4.tar.gz"
+  sha256 "c37c73eb138255681d3c965cd0965d1d84b7e8db3815498ce7b898349747e5b4"
   license "GPL-3.0-or-later"
   head "https://github.com/jpease/gpy.git", branch: "main"
 
   livecheck do
     url :stable
     strategy :github_latest
-  end
-
-  bottle do
-    root_url "https://github.com/jpease/homebrew-tap/releases/download/gpy-0.10.3"
-    sha256 cellar: :any_skip_relocation, arm64_sequoia: "28c67a6e443752aa92d482d76c7a97e22d0bec1fe2b5994407f69c58c1fab586"
-    sha256 cellar: :any,                 x86_64_linux:  "38580e98795ea46c7075802d99a10ba63f788fb3ad9ab2cabbed86162361d065"
   end
 
   depends_on "rust" => :build
@@ -31,6 +25,16 @@ class Gpy < Formula
     pkgshare.install "fish", "zsh", "bash", "plugins"
 
     doc.install "README.md", "SECURITY.md"
+  end
+
+  # An agent still running from the previous version keeps serving (and can
+  # fail) after an upgrade. Replace it when one is running; never start one.
+  # Best effort: the post_install sandbox may refuse the socket, and a failure
+  # must not fail the install.
+  def post_install
+    return unless quiet_system bin/"gpy-agent", "status"
+
+    quiet_system bin/"gpy-agent", "restart"
   end
 
   def caveats
