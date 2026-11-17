@@ -1,20 +1,14 @@
 class Gpy < Formula
   desc "Fast shell prompt for Fish, Zsh and Bash with an agent-based architecture"
   homepage "https://github.com/jpease/gpy"
-  url "https://github.com/jpease/gpy/archive/refs/tags/v0.10.5.tar.gz"
-  sha256 "909ac73ab18af7e1e1aed5cbc4c88cb59014de4f5d5fddd248c0ebe5462ac43d"
+  url "https://github.com/jpease/gpy/archive/refs/tags/v0.11.0.tar.gz"
+  sha256 "0f126289c85dbff32b03923cbfccf2d9e047c61fee84f249c44c672fd7244afd"
   license "GPL-3.0-or-later"
   head "https://github.com/jpease/gpy.git", branch: "main"
 
   livecheck do
     url :stable
     strategy :github_latest
-  end
-
-  bottle do
-    root_url "https://github.com/jpease/homebrew-tap/releases/download/gpy-0.10.5"
-    sha256 cellar: :any_skip_relocation, arm64_sequoia: "b8d71b9be388586fe0c510eeffada9c6ec9868ccff54506372e98b699df75946"
-    sha256 cellar: :any,                 x86_64_linux:  "09534de78764a96945475471155d4eccad7a944e3facee44a13ec46c0063ce5e"
   end
 
   depends_on "rust" => :build
