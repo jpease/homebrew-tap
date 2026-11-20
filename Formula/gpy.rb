@@ -1,20 +1,14 @@
 class Gpy < Formula
   desc "Fast shell prompt for Fish, Zsh and Bash with an agent-based architecture"
   homepage "https://github.com/jpease/gpy"
-  url "https://github.com/jpease/gpy/archive/refs/tags/v0.12.0.tar.gz"
-  sha256 "5e43fdb7ed17a444203ea9bfe9a04fb50412bb0c9cde29549d1ccbed505d6dff"
+  url "https://github.com/jpease/gpy/archive/refs/tags/v0.12.1.tar.gz"
+  sha256 "c3370fb9b146060ab25e573498c6a45c89fe9edb71d15f0f52114e88320c63c1"
   license "GPL-3.0-or-later"
   head "https://github.com/jpease/gpy.git", branch: "main"
 
   livecheck do
     url :stable
     strategy :github_latest
-  end
-
-  bottle do
-    root_url "https://github.com/jpease/homebrew-tap/releases/download/gpy-0.12.0"
-    sha256 cellar: :any_skip_relocation, arm64_sequoia: "63b53d708597d34236dd6479f70d370fe51edb354d3d42bb170b7f826648d33d"
-    sha256 cellar: :any,                 x86_64_linux:  "cffe0b26619f83e64a618aa3273f937f8189e96ae4535eead251615f6a4a0cb5"
   end
 
   depends_on "rust" => :build
@@ -53,6 +47,12 @@ class Gpy < Formula
       It detects your shell from $SHELL; pass --shell fish|zsh|bash to pick
       another. Then restart your shell with `exec $SHELL`.
       Run 'gpy doctor' any time to check your setup.
+
+      Upgrading from 0.12.0 or earlier? Run once, then `exec $SHELL`:
+
+        brew postinstall jpease/tap/gpy && gpy setup
+
+      Later upgrades refresh the agent and shell files on the next prompt.
     EOS
   end
 
